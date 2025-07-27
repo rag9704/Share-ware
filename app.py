@@ -12,7 +12,28 @@ IST = pytz.timezone("Asia/Kolkata")
 today_ist = datetime.now(IST).date()
 
 
-st.title("Share-ware")
+st.title("Monkey Business")
+st.markdown(
+    """
+    ### 🐒 Monkey vs Market: Can Random Picks Beat Your Portfolio?
+
+    In 1973, Princeton professor **Burton Malkiel** famously claimed in his book _A Random Walk Down Wall Street_ that  
+    > “A blindfolded monkey throwing darts at a newspaper's financial pages could select a portfolio that would do just as well as one carefully selected by experts.”
+
+    But what if the monkey *actually* performs better?
+
+    According to research by **Rob Arnott** and his team at Research Affiliates, 100 randomly selected portfolios (a.k.a. "monkeys")  
+    beat the market nearly **98% of the time** over several decades!  
+    [📖 Read the full article on Forbes →](https://www.forbes.com/sites/rickferri/2012/12/20/any-monkey-can-beat-the-market/)
+
+    ---
+
+    This tool lets you simulate that experiment.  
+    Select a date, choose the number of random companies, and see if a dart-throwing monkey would have done better than your hand-picked portfolio!
+
+    🔄 Let the monkey games begin...
+    """
+)
 
 st.write("Does random selection of stock beat your portfolio? ")
 start_date = st.date_input("share buying date", datetime.today() - timedelta(days=183))
@@ -69,6 +90,7 @@ if st.button("Run Simulation"):
             st.write(f"Your return would have been :red[{portfolio:.2f}%]")
         else:
             st.write(f"Your return would have been :green[{portfolio:.2f}%]")
+
         df = pd.DataFrame(
             {
                     "name": random_sample,
