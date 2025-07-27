@@ -65,7 +65,10 @@ if st.button("Run Simulation"):
         time.sleep(0.5)
 
         portfolio = 100*sum(ret)/len(ret)
-        st.write("Your return would have been ", portfolio)
+        if portfolio < 0:
+            st.write(f"Your return would have been :red[{portfolio:.2f}%]")
+        else:
+            st.write(f"Your return would have been :green[{portfolio:.2f}%]")
         df = pd.DataFrame(
             {
                     "name": random_sample,
