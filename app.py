@@ -94,7 +94,7 @@ if st.button("Run Simulation"):
         df = pd.DataFrame(
             {
                     "name": random_sample,
-                    "views_history": graph,
+                    "Price": graph,
                 }
             )
         row_height = 40  # Approximate row height in pixels
@@ -106,8 +106,8 @@ if st.button("Run Simulation"):
                     df,
                     column_config={
                         "name": "Stocks",
-                        "views_history": st.column_config.LineChartColumn(
-                            "Views (past 30 days)", y_min=0, y_max=1000
+                        "Price": st.column_config.LineChartColumn(
+                            "Price", y_min=0, y_max=1000
                         ),
                     },
                     hide_index=True,
