@@ -59,6 +59,12 @@ tickers = [f"{s}.NS" for s in symbols]
 n_o_s = st.number_input (
     "number of companies", value=5, placeholder="Type a number..."
 )
+options = st.multiselect(
+    "Enter your portfolio share as well!",
+    tickers,
+    default=["TI.NS", "INFY.NS"],
+)
+
 if st.button("Run Simulation"):
         progress_text = "Downloading stock data... Please wait."
         my_bar = st.progress(0, text=progress_text)
@@ -83,18 +89,48 @@ if st.button("Run Simulation"):
             percent_complete = int((i + 1) / len(random_sample) * 100)
             my_bar.progress(percent_complete, text=f"{progress_text} ({percent_complete}%)")
             time.sleep(0.1)  
-        time.sleep(0.5)
-
+        ret_1 = []
+        graph_1=[]
         portfolio = 100*sum(ret)/len(ret)
-        if portfolio < 0:
-            st.write(f"Your return would have been :red[{portfolio:.2f}%]")
-        else:
-            st.write(f"Your return would have been :green[{portfolio:.2f}%]")
+        if options != []:
+            for i,tkr in enumerate(options):
+                x = yf.download(
+                        tickers=tkr,
+                        start=start_date,
+                        end=today_ist,
+                        interval="1d",
+                        threads=False,
+                        progress=False,
+                        auto_adjust=False
+                    )['Close'][tkr]
+                
+                graph_1.append(list(x.values))
+                ret_1.append((x[-1] / x[0] - 1))
+                percent_complete = int((i + 1) / len(options) * 100)
+                my_bar.progress(percent_complete, text=f"{progress_text} ({percent_complete}%)")
+                time.sleep(0.1)  
+            portfolio_1 = 100*sum(ret_1)/len(ret_1)
+            time.sleep(0.5)
+            if portfolio < portfolio_1:
+                st.write(f"Your return is better than Monkey :green[{portfolio_1:.2f}%] vs :red[{portfolio:.2f}%]")
+            else:
+                st.write(f"Monkey Wins :red[{portfolio_1:.2f}%] vs :green[{portfolio:.2f}%]")
+        else : 
+            if portfolio < 0:
+                st.write(f"Your return would have been :red[{portfolio:.2f}%]")
+            else:
+                st.write(f"Your return would have been :green[{portfolio:.2f}%]")
 
+                
+        
+        
+
+        
+        
         df = pd.DataFrame(
             {
                     "name": random_sample,
-                    "Price": graph,
+                    "views_history": graph,
                 }
             )
         row_height = 40  # Approximate row height in pixels
@@ -106,8 +142,8 @@ if st.button("Run Simulation"):
                     df,
                     column_config={
                         "name": "Stocks",
-                        "Price": st.column_config.LineChartColumn(
-                            "Price", y_min=0, y_max=1000
+                        "views_history": st.column_config.LineChartColumn(
+                            "Views (past 30 days)", y_min=0, y_max=1000
                         ),
                     },
                     hide_index=True,
